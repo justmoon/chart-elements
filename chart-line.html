@@ -16,12 +16,21 @@ Often, it is used to show trend data, and the comparison of two data sets.
 @homepage http://robdodson.github.io/chart-elements
 -->
 
-<polymer-element name="chart-line" attributes="width height labels values colors">
+<polymer-element name="chart-line" attributes="width height labels values colors options">
   <template>
     <canvas id="canvas" width="{{width}}" height="{{height}}"></canvas>
   </template>
   <script>
     Polymer({
+      /**
+       * Additional Chart.js options.
+       *  
+       * @attribute options
+       * @type Object
+       * @default null
+       */
+      options: null,
+
       ready: function () {
         this.datasets = [];
         this.values.forEach(function (val, i) {
@@ -35,11 +44,14 @@ Often, it is used to show trend data, and the comparison of two data sets.
         }, this);
 
         this.data = { labels: this.labels, datasets: this.datasets };
-
-        console.log(this.data);
+        
+        var options = this.options || {};
+        if (options && typeof(options) == 'string') {
+          options = JSON.parse(options);
+        }
 
         this.ctx = this.$.canvas.getContext('2d');
-        this.chart = new Chart(this.ctx).Line(this.data);
+        this.chart = new Chart(this.ctx).Line(this.data, options);
       },
       labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
       values: [
