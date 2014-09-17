@@ -21,16 +21,17 @@ This type of chart is often useful when we want to show a comparison data simila
   </template>
   <script>
     Polymer("chart-polar-area", {
-      /**
-       * Additional Chart.js options.
-       *  
-       * @attribute options
-       * @type Object
-       * @default null
-       */
-      options: null,
-
-      ready: function () {
+      values: [30, 90, 18, 58, 82],
+      colors: ["#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#F7464A"],
+      observe: {
+        labels: 'updateChart',
+        colors: 'updateChart',
+        values: 'updateChart'
+      },
+      updateChart: function () {
+        if(this.chart){
+          this.chart.destroy();
+        }
         this.data = [];
         this.values.forEach(function (val, i) {
           this.data.push({ color: this.colors[i], value: val });
@@ -43,9 +44,7 @@ This type of chart is often useful when we want to show a comparison data simila
 
         this.ctx = this.$.canvas.getContext('2d');
         this.chart = new Chart(this.ctx).PolarArea(this.data, options);
-      },
-      values: [30, 90, 18, 58, 82],
-      colors: ["#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#F7464A"]
+      }
     });
   </script>
 </polymer-element>
